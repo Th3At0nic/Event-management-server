@@ -55,13 +55,16 @@ CLOUDINARY_API_SECRET=your_secret
 
 ```
 ## 📫 API Endpoints
-Method	Endpoint	Description
-POST	/api/auth/register	Register a new user
-POST	/api/auth/login	Login and get access tokens
-POST	/api/auth/refresh-token	Get new access token
-GET	    /api/events	Get all events (search + filter + pagination)
-POST	/api/events	Create a new event
-PATCH	/api/events/:id/join	Join an event
-PATCH	/api/events/:id	Update an event
-DELETE	/api/events/:id	Delete an event
-GET	    /api/my-events	Get events created by the user
+
+| Method | Endpoint                   | Description                  |
+|--------|----------------------------|------------------------------|
+| POST   | `/api/auth/register`       | Register a new user          |
+| POST   | `/api/auth/login`          | Login and get access tokens  |
+| POST   | `/api/auth/refresh-token`  | Get new access token         |
+| GET    | `/api/events`              | Get all events (search + filter + pagination) |
+| POST   | `/api/events`              | Create a new event           |
+| PATCH  | `/api/events/:id/join`     | Join an event                |
+| PATCH  | `/api/events/:id`          | Update an event              |
+| DELETE | `/api/events/:id`          | Delete an event              |
+| GET    | `/api/my-events`           | Get events created by the user |
+
