@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { EventService } from './event.service';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createEvent = catchAsync(async (req, res, next) => {
   const result = await EventService.createEventIntoDB(req.body);
@@ -11,6 +12,21 @@ const createEvent = catchAsync(async (req, res, next) => {
   sendResponse(res, StatusCodes.CREATED, true, message, result);
 });
 
+const getAllEvents = catchAsync(async (req, res, next) => {
+  const result = await EventService.getAllEventsFromDB();
+  const message = 'All Events are Retrieved Successfully';
+  sendResponse(res, StatusCodes.OK, true, message, result);
+});
+
+const getMyEvents = catchAsync(async (req, res, next) => {
+  const { userEmail } = req.user as JwtPayload;
+  const result = await EventService.getMyEventsFromDB(userEmail);
+  const message = 'Your Events are Retrieved Successfully';
+  sendResponse(res, StatusCodes.OK, true, message, result);
+});
+
 export const EventController = {
   createEvent,
+  getAllEvents,
+  getMyEvents,
 };

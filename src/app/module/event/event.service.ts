@@ -28,6 +28,32 @@ const createEventIntoDB = async (payload: TEvent) => {
   return result;
 };
 
+const getAllEventsFromDB = async () => {
+  const result = await EventModel.find();
+
+  if (!result.length) {
+    throwAppError('', 'No Events Found at this moment', StatusCodes.NOT_FOUND);
+  }
+
+  return result;
+};
+
+const getMyEventsFromDB = async (organizerEmail: string) => {
+  const result = await EventModel.find({ organizerEmail });
+
+  if (!result) {
+    throwAppError(
+      'organizerEmail',
+      "You don't have any event at this moment, Add one",
+      StatusCodes.NOT_FOUND,
+    );
+  }
+
+  return result;
+};
+
 export const EventService = {
   createEventIntoDB,
+  getAllEventsFromDB,
+  getMyEventsFromDB,
 };
