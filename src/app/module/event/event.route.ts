@@ -18,4 +18,10 @@ router.post(
 
 router.get('/my-events', auth(USER_ROLE.user), EventController.getMyEvents);
 
+router.patch(
+  '/:id/join',
+  auth(USER_ROLE.user),
+  EventController.assignUserAndAttendeeCount,
+);
+
 export const EventRoutes = router;

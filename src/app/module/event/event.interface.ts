@@ -7,5 +7,6 @@ export type TEvent = {
   dateTime: Date;
   organizerName: string;
   organizerEmail: string;
+  attendeeCount: number;
   joinedUsers: string[]; // array of user emails or IDs
 };

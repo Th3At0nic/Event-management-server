@@ -29,6 +29,11 @@ const eventSchema = new Schema<TEvent>(
       type: String,
       required: true,
     },
+    attendeeCount: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
     joinedUsers: {
       type: [String], // storing user emails
       default: [],

@@ -25,8 +25,20 @@ const getMyEvents = catchAsync(async (req, res, next) => {
   sendResponse(res, StatusCodes.OK, true, message, result);
 });
 
+const assignUserAndAttendeeCount = catchAsync(async (req, res, next) => {
+  const { userEmail } = req.user as JwtPayload;
+  const { id } = req.params;
+  const result = await EventService.assignUserAndAttendeeCountIntoDB(
+    id,
+    userEmail,
+  );
+  const message = 'Joined Successfully';
+  sendResponse(res, StatusCodes.OK, true, message, result);
+});
+
 export const EventController = {
   createEvent,
   getAllEvents,
   getMyEvents,
+  assignUserAndAttendeeCount,
 };

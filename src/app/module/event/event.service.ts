@@ -62,8 +62,42 @@ const getMyEventsFromDB = async (organizerEmail: string) => {
   return result;
 };
 
+const assignUserAndAttendeeCountIntoDB = async (
+  eventId: string,
+  userEmail: string,
+) => {
+  const event = await EventModel.findById(eventId);
+
+  if (!event) {
+    throwAppError('', 'Event not found', StatusCodes.NOT_FOUND);
+  }
+
+  //prevent double joining
+  const alreadyJoined = event?.joinedUsers.includes(userEmail);
+  if (alreadyJoined) {
+    throwAppError(
+      '',
+      'You have already joined this event',
+      StatusCodes.CONFLICT,
+    );
+  }
+
+  //now update the event atomically
+  const updatedEvent = await EventModel.findByIdAndUpdate(
+    eventId,
+    {
+      $inc: { attendeeCount: 1 },
+      $addToSet: { joinedUsers: userEmail }, // avoids duplicates
+    },
+    { new: true },
+  );
+
+  return updatedEvent;
+};
+
 export const EventService = {
   createEventIntoDB,
   getAllEventsFromDB,
   getMyEventsFromDB,
+  assignUserAndAttendeeCountIntoDB,
 };
