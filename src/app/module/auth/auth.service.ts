@@ -111,7 +111,15 @@ const loginUserAuth = async (payload: TLoginUser) => {
     config.jwt_refresh_expires_in as string,
   );
 
+  const userData = {
+    name: user?.name,
+    email: user?.email,
+    role: user?.role,
+    photoURL: user?.photoURL,
+  };
+
   return {
+    userData,
     accessToken,
     refreshToken,
   };

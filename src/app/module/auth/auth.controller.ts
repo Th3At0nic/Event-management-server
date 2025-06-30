@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 
 const loginUser = catchAsync(async (req, res, next) => {
   const result = await AuthUserServices.loginUserAuth(req.body);
-  const { accessToken, refreshToken } = result;
+  const { userData, accessToken, refreshToken } = result;
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
@@ -17,9 +17,8 @@ const loginUser = catchAsync(async (req, res, next) => {
   });
 
   const message = 'Login Successful';
-  sendResponse(res, StatusCodes.OK, true, message, { accessToken });
+  sendResponse(res, StatusCodes.OK, true, message, { userData, accessToken });
 });
-
 
 const registerUser = catchAsync(async (req, res, next) => {
   const file = req?.file as Express.Multer.File;
@@ -27,7 +26,6 @@ const registerUser = catchAsync(async (req, res, next) => {
   const message = 'User Registered Successfully';
   sendResponse(res, StatusCodes.OK, true, message, result);
 });
-
 
 const createNewAccessTokenByRefreshToken = catchAsync(
   async (req, res, next) => {
@@ -39,7 +37,6 @@ const createNewAccessTokenByRefreshToken = catchAsync(
     sendResponse(res, 200, true, message, result);
   },
 );
-
 
 // const changePassword = catchAsync(async (req, res, next) => {
 //   const user = req.user as JwtPayload;

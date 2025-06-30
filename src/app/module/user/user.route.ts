@@ -14,6 +14,6 @@ const router = express.Router();
 //   userControllers.registerUser,
 // );
 
-router.get('/user', userControllers.getSingleUser);
+router.get('/profile', userControllers.getSingleUser);
 
 export const UserRoute = router;
