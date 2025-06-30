@@ -13,7 +13,7 @@ const createEvent = catchAsync(async (req, res, next) => {
 });
 
 const getAllEvents = catchAsync(async (req, res, next) => {
-  const result = await EventService.getAllEventsFromDB();
+  const result = await EventService.getAllEventsFromDB(req.query);
   const message = 'All Events are Retrieved Successfully';
   sendResponse(res, StatusCodes.OK, true, message, result);
 });

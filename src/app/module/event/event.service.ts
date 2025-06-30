@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import throwAppError from '../../utils/throwAppError';
 import { TEvent } from './event.interface';
 import { EventModel } from './event.model';
+import { QueryBuilder } from '../../builder/QueryBuilder';
 
 const createEventIntoDB = async (payload: TEvent) => {
   // Check for duplicate title
@@ -28,8 +29,17 @@ const createEventIntoDB = async (payload: TEvent) => {
   return result;
 };
 
-const getAllEventsFromDB = async () => {
-  const result = await EventModel.find();
+const getAllEventsFromDB = async (query: Record<string, unknown>) => {
+  const eventSearchableFields = ['title'];
+
+  const eventsQuery = new QueryBuilder(query, EventModel.find())
+    .search(eventSearchableFields)
+    .filter()
+    .sortBy()
+    .paginate()
+    .fields();
+
+  const result = await eventsQuery.modelQuery;
 
   if (!result.length) {
     throwAppError('', 'No Events Found at this moment', StatusCodes.NOT_FOUND);
