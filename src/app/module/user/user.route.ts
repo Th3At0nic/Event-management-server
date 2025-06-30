@@ -1,5 +1,7 @@
 import express from 'express';
 import { userControllers } from './user.controller';
+import { auth } from '../../middlewares/authRequest';
+import { USER_ROLE } from './user.constant';
 
 const router = express.Router();
 
@@ -14,6 +16,6 @@ const router = express.Router();
 //   userControllers.registerUser,
 // );
 
-router.get('/profile', userControllers.getSingleUser);
+router.get('/profile', auth(USER_ROLE.user), userControllers.getSingleUser);
 
 export const UserRoute = router;
