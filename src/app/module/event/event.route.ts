@@ -19,13 +19,13 @@ router.post(
 router.get('/my-events', auth(USER_ROLE.user), EventController.getMyEvents);
 
 router.patch(
-  '/:id/update-event',
+  '/:id',
   auth(USER_ROLE.user),
   EventController.updateEvent,
 );
 
 router.delete(
-  '/:id/delete-event',
+  '/:id',
   auth(USER_ROLE.user),
   EventController.deleteEvent,
 );

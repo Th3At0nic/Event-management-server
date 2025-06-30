@@ -20,7 +20,7 @@ const getAllEvents = catchAsync(async (req, res, next) => {
 
 const getMyEvents = catchAsync(async (req, res, next) => {
   const { userEmail } = req.user as JwtPayload;
-  const result = await EventService.getMyEventsFromDB(userEmail);
+  const result = await EventService.getMyEventsFromDB(req.query, userEmail);
   const message = 'Your Events are Retrieved Successfully';
   sendResponse(res, StatusCodes.OK, true, message, result);
 });

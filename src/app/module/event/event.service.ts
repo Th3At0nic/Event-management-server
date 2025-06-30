@@ -48,10 +48,25 @@ const getAllEventsFromDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-const getMyEventsFromDB = async (organizerEmail: string) => {
-  const result = await EventModel.find({ organizerEmail });
+const getMyEventsFromDB = async (
+  query: Record<string, unknown>,
+  organizerEmail: string,
+) => {
+  const eventSearchableFields = ['title'];
 
-  if (!result) {
+  const eventsQuery = new QueryBuilder(
+    query,
+    EventModel.find({ organizerEmail }),
+  )
+    .search(eventSearchableFields)
+    .filter()
+    .sortBy()
+    .paginate()
+    .fields();
+
+  const result = await eventsQuery.modelQuery;
+
+  if (!result.length) {
     throwAppError(
       'organizerEmail',
       "You don't have any event at this moment, Add one",
