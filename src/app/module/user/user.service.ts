@@ -1,65 +1,19 @@
 import { UserModel } from './user.model';
-import { TUser } from './user.interface';
 import throwAppError from '../../utils/throwAppError';
 import { StatusCodes } from 'http-status-codes';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const registerUserIntoDB = async (
-  file: Express.Multer.File,
-  payload: TUser,
-) => {
-  if (file) {
-    const imgName = `${payload.email}-${Date.now()}`;
+const getSingleUserFromDB = async (userEmail: string) => {
+  const result = await UserModel.find({ email: userEmail });
 
-    const uploadImgResult = await sendImageToCloudinary(file.buffer, imgName);
-    if (uploadImgResult?.secure_url) {
-      payload.photoURL = uploadImgResult.secure_url;
-    } else {
-      payload.photoURL = '';
-      throwAppError(
-        'photoURL',
-        'Failed to upload the photo to cloudinary. Try again.',
-        StatusCodes.REQUEST_TIMEOUT,
-      );
-    }
-  } else {
-    throwAppError(
-      'photoURL',
-      'You Must Upload the Profile Photo',
-      StatusCodes.BAD_REQUEST,
-    );
-  }
-
-  const user: TUser = {
-    name: payload.name,
-    email: payload.email,
-    password: payload.password,
-    photoURL: payload.photoURL,
-  };
-
-  //preventing duplicate creation of student
-  const userExisted = await UserModel.isUserExists(user.email as string);
-
-  if (userExisted) {
+  if (!result.length) {
     throwAppError(
       'email',
-      `The user id: ${user.email} is already registered.`,
-      StatusCodes.CONFLICT,
+      'User not found with this email',
+      StatusCodes.NOT_FOUND,
     );
   }
 
-  //creating a new user
-  const newUser = await UserModel.create(user);
-
-  if (!newUser) {
-    throwAppError(
-      'user',
-      'Failed to create user. Please try again later.',
-      StatusCodes.INTERNAL_SERVER_ERROR,
-    );
-  }
-
-  return newUser;
+  return result;
 };
 
-export const userServices = { registerUserIntoDB };
+export const userServices = {  getSingleUserFromDB };

@@ -7,11 +7,10 @@ import { userServices } from './user.service';
 
 //imported HOF(catchAsync()) to pass the async func there to handle the promise and error, reduced boilerplates
 
-const registerUser = catchAsync(async (req, res, next) => {
-  const file = req?.file as Express.Multer.File;
-  const result = await userServices.registerUserIntoDB(file, req.body);
-  const message = 'User Registered Successfully';
+const getSingleUser = catchAsync(async (req, res, next) => {
+  const result = await userServices.getSingleUserFromDB(req.body.email);
+  const message = 'User Data Retrieved Successfully';
   sendResponse(res, StatusCodes.OK, true, message, result);
 });
 
-export const userControllers = { registerUser };
+export const userControllers = { getSingleUser };
