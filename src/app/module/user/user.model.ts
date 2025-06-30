@@ -8,8 +8,7 @@ export const userSchema = new Schema<TUser>(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: 0 },
-    role: { type: String, enum: ['admin', 'user'], required: true },
-    deactivated: { type: Boolean, default: false },
+    photoURL: { type: String, required: true },
   },
   { timestamps: true },
 );

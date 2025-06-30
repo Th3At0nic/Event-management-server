@@ -8,7 +8,8 @@ import { userServices } from './user.service';
 //imported HOF(catchAsync()) to pass the async func there to handle the promise and error, reduced boilerplates
 
 const registerUser = catchAsync(async (req, res, next) => {
-  const result = await userServices.registerUserIntoDB(req.body);
+  const file = req?.file as Express.Multer.File;
+  const result = await userServices.registerUserIntoDB(file, req.body);
   const message = 'User Registered Successfully';
   sendResponse(res, StatusCodes.OK, true, message, result);
 });

@@ -6,8 +6,7 @@ export type TUser = {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'user';
-  deactivated: boolean;
+  photoURL: string;
 };
 
 export interface IUser extends Model<TUser> {

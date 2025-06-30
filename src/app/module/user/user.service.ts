@@ -2,15 +2,39 @@ import { UserModel } from './user.model';
 import { TUser } from './user.interface';
 import throwAppError from '../../utils/throwAppError';
 import { StatusCodes } from 'http-status-codes';
-import { USER_ROLE } from './user.constant';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
-const registerUserIntoDB = async (payload: TUser) => {
+const registerUserIntoDB = async (
+  file: Express.Multer.File,
+  payload: TUser,
+) => {
+  if (file) {
+    const imgName = `${payload.email}-${Date.now()}`;
+
+    const uploadImgResult = await sendImageToCloudinary(file.buffer, imgName);
+    if (uploadImgResult?.secure_url) {
+      payload.photoURL = uploadImgResult.secure_url;
+    } else {
+      payload.photoURL = '';
+      throwAppError(
+        'photoURL',
+        'Failed to upload the photo to cloudinary. Try again.',
+        StatusCodes.REQUEST_TIMEOUT,
+      );
+    }
+  } else {
+    throwAppError(
+      'photoURL',
+      'You Must Upload the Profile Photo',
+      StatusCodes.BAD_REQUEST,
+    );
+  }
+
   const user: TUser = {
     name: payload.name,
     email: payload.email,
     password: payload.password,
-    role: USER_ROLE.user,
-    deactivated: false,
+    photoURL: payload.photoURL,
   };
 
   //preventing duplicate creation of student
