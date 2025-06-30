@@ -95,9 +95,73 @@ const assignUserAndAttendeeCountIntoDB = async (
   return updatedEvent;
 };
 
+const updateEventIntoDB = async (
+  userEmail: string,
+  eventId: string,
+  updateData: Partial<TEvent>,
+) => {
+  const event = await EventModel.findById(eventId);
+
+  if (!event) {
+    throwAppError('eventId', 'Event Not Found', StatusCodes.NOT_FOUND);
+  }
+
+  if (event?.organizerEmail !== userEmail) {
+    throwAppError(
+      'unauthorized',
+      'You are unauthorized to update this event. You only can update your own event',
+      StatusCodes.UNAUTHORIZED,
+    );
+  }
+
+  const result = await EventModel.findByIdAndUpdate(eventId, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!result) {
+    throwAppError(
+      '',
+      "Something went wrong. Couldn't update the Event, try again",
+      StatusCodes.INTERNAL_SERVER_ERROR,
+    );
+  }
+
+  return result;
+};
+
+const deleteEventFromDB = async (userEmail: string, eventId: string) => {
+  const event = await EventModel.findById(eventId);
+
+  if (!event) {
+    throwAppError('eventId', 'Event Not Found', StatusCodes.NOT_FOUND);
+  }
+
+  if (event?.organizerEmail !== userEmail) {
+    throwAppError(
+      'unauthorized',
+      'You are unauthorized to delete this event. You only can delete your own event',
+      StatusCodes.UNAUTHORIZED,
+    );
+  }
+
+  const result = await EventModel.findByIdAndDelete(eventId);
+
+  if (!result) {
+    throwAppError(
+      'eventId',
+      'Delete failed. Event may not found, try again.',
+      StatusCodes.NOT_FOUND,
+    );
+  }
+  return result;
+};
+
 export const EventService = {
   createEventIntoDB,
   getAllEventsFromDB,
   getMyEventsFromDB,
   assignUserAndAttendeeCountIntoDB,
+  updateEventIntoDB,
+  deleteEventFromDB,
 };

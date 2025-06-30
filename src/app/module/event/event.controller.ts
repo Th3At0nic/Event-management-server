@@ -36,9 +36,27 @@ const assignUserAndAttendeeCount = catchAsync(async (req, res, next) => {
   sendResponse(res, StatusCodes.OK, true, message, result);
 });
 
+const updateEvent = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { userEmail } = req.user as JwtPayload;
+  const result = await EventService.updateEventIntoDB(userEmail, id, req.body);
+  const message = 'Updated Event Successfully';
+  sendResponse(res, StatusCodes.OK, true, message, result);
+});
+
+const deleteEvent = catchAsync(async (req, res, next) => {
+  const { userEmail } = req.user as JwtPayload;
+  const { id } = req.params;
+  const result = await EventService.deleteEventFromDB(userEmail, id);
+  const message = 'Deleted Event Successfully';
+  sendResponse(res, StatusCodes.OK, true, message, result ? null : result);
+});
+
 export const EventController = {
   createEvent,
   getAllEvents,
   getMyEvents,
   assignUserAndAttendeeCount,
+  updateEvent,
+  deleteEvent,
 };
