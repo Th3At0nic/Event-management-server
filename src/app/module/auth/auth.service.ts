@@ -88,7 +88,7 @@ const loginUserAuth = async (payload: TLoginUser) => {
   if (!isPasswordValid) {
     throwAppError(
       'password',
-      'The provided password is incorrect. Please try again.',
+      'Incorrect password. Please try again.',
       StatusCodes.UNAUTHORIZED,
     );
   }
