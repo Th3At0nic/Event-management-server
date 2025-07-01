@@ -129,6 +129,19 @@ const updateEventIntoDB = async (
     );
   }
 
+  const existingEvent = await EventModel.findOne({
+    title: updateData.title,
+    _id: { $ne: eventId }, // ← exclude the current event
+  });
+
+  if (existingEvent) {
+    throwAppError(
+      'title',
+      'An event with this title already exists. Please choose a different title.',
+      StatusCodes.CONFLICT,
+    );
+  }
+
   const result = await EventModel.findByIdAndUpdate(eventId, updateData, {
     new: true,
     runValidators: true,
